@@ -2,6 +2,8 @@ const app = require("../app");
 const request = require("supertest");
 const db = require("../db/connection");
 const seed = require("../db/seeds/seed");
+const endpoints = require('../endpoints.json')
+
 const {
   topicData,
   userData,
@@ -46,25 +48,44 @@ describe("/api", () => {
       });
   });
 
-  test("GET:200 To check if it has the property description", () => {
+
+  test("GET:200 To check if it has the relevent properties", () => {
     return request(app)
       .get("/api")
       .expect(200)
       .then((response) => {
-        for (const key in response.body) {
-          if (key === 'GET /api') {
-            expect(typeof response.body[key].description).toBe('string');       
+        for (const key in endpoints) {
+          if(response.body[key]) {
+            const expectedProperties= Object.keys(endpoints[key]);
+            expectedProperties.forEach(property => {
+            expect(response.body[key]).toHaveProperty(property);
+            })
           }
-          else {
-            expect(typeof response.body[key].description).toBe('string');
-            expect(Array.isArray(response.body[key].queries)).toBe(true);   
-            expect(typeof response.body[key].exampleResponse).toBe('object');
+          
+        }
+      });
+  });
 
+  test("GET:200 To check if the properies have the same value", () => {
+    return request(app)
+      .get("/api")
+      .expect(200)
+      .then((response) => {
+        for (const key in endpoints) {
+          if(response.body[key]) {
+            const expectedProperties= Object.keys(endpoints[key]);
+
+            expectedProperties.forEach(property => {
+            const expectedValue = endpoints[key][property];
+            const responseBodyValue = response.body[key][property];
+            expect(responseBodyValue).toEqual(expectedValue);
+            })
           }
+          
         }
       });
   });
 
 
-
 });  
+
