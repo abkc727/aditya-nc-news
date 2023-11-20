@@ -1,6 +1,10 @@
 # Northcoders News API
 
-In order to run the project the environment variables must be set.
-The developer must create .env.development and .env.dev files to the project's main folder. the files must contain the environment variable PGDATABASE in the format - PGDATABASE=<db_name> with the curresponding database names. eg: for test data, if db name is db_test, a .env.dev file should be created containing PGDATABASE=db_test.
+1. Run npm install: to get started, please run 'npm install' command to install the required packages.
 
+2. Set up environment variables:
+In order to run the project the environment variables must be set.
+The developer must create .env.development and .env.test files to the project's main folder. the files must contain the environment variable PGDATABASE in the format - PGDATABASE=<db_name> with the curresponding database names. eg: for test data, if db name is db_test, a .env.test file should be created containing PGDATABASE=db_test.
+
+3: Setup data base: Run 'npm run setup-dbs' command to run the script that creates the test and development databases.
 
