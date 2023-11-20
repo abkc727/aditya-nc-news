@@ -4,7 +4,9 @@
 
 2. Set up environment variables:
 In order to run the project the environment variables must be set.
-The developer must create .env.development and .env.test files to the project's main folder. the files must contain the environment variable PGDATABASE in the format - PGDATABASE=<db_name> with the curresponding database names. eg: for test data, if db name is db_test, a .env.test file should be created containing PGDATABASE=db_test.
+The developer must create .env.development and .env.test files to the project's main folder. the files must contain the environment variable PGDATABASE in the format - PGDATABASE=<db_name> with the curresponding database names. 
+
+The dev and test db names are nc_news and nc_news_test respectively. Therefore a .env.test file should be created containing PGDATABASE=nc_news_test. Similarly, .env.development file should be created containing PGDATABASE=nc_news.
 
 3: Setup data base: Run 'npm run setup-dbs' command to run the script that creates the test and development databases.
 
