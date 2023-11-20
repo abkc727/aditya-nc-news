@@ -34,3 +34,37 @@ describe("/api/topics", () => {
       });
   });
 });
+
+
+describe("/api", () => {
+  test("GET:200 To check if it returns an object", () => {
+    return request(app)
+      .get("/api")
+      .expect(200)
+      .then((response) => {
+        expect(typeof response.body).toBe('object');
+      });
+  });
+
+  test("GET:200 To check if it has the property description", () => {
+    return request(app)
+      .get("/api")
+      .expect(200)
+      .then((response) => {
+        for (const key in response.body) {
+          if (key === 'GET /api') {
+            expect(typeof response.body[key].description).toBe('string');       
+          }
+          else {
+            expect(typeof response.body[key].description).toBe('string');
+            expect(Array.isArray(response.body[key].queries)).toBe(true);   
+            expect(typeof response.body[key].exampleResponse).toBe('object');
+
+          }
+        }
+      });
+  });
+
+
+
+});  
