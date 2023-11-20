@@ -10,8 +10,4 @@ if (!process.env.PGDATABASE) {
   throw new Error('PGDATABASE not set');
 }
 
-
-console.log(`Environment: ${ENV}`)
-console.log(`Path to the env file: ${__dirname}/../.env.${ENV}`)
-console.log(`Database: ${process.env.PGDATABASE}`)
 module.exports = new Pool();

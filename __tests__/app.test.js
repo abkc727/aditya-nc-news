@@ -21,18 +21,6 @@ describe("/api/topics", () => {
       });
   });
 
-  test("GET:200 to check if it sends an array of topic objects with slug and description as properties", () => {
-    return request(app)
-      .get("/api/topics")
-      .expect(200)
-      .then((response) => {
-        response.body.topics.forEach((topic) => {
-          expect(Object.hasOwn(topic, "slug")).toBe(true);
-          expect(Object.hasOwn(topic, "description")).toBe(true);
-        });
-      });
-  });
-
   test("GET:200 to check the number or responses and type of the properties", () => {
     return request(app)
       .get("/api/topics")
