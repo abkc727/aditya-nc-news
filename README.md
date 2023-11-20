@@ -10,3 +10,11 @@ The dev and test db names are nc_news and nc_news_test respectively. Therefore a
 
 3: Setup data base: Run 'npm run setup-dbs' command to run the script that creates the test and development databases.
 
+
+Run the following commands
+
+1. npm run seed
+
+2. npm install -D supertest
+
+3. npm i express
