@@ -1,3 +1,9 @@
 # Northcoders News API
 
-For instructions, please head over to [L2C NC News](https://l2c.northcoders.com/courses/be/nc-news).
+Run the following commands
+
+1. npm run seed
+
+2. npm install -D supertest
+
+3. npm i express
