@@ -102,16 +102,8 @@ describe("/api", () => {
 })
 
 describe("/api/articles", () => {
-  test("GET:200 To check if it returns an array of articles", () => {
-    return request(app)
-      .get("/api/articles")
-      .expect(200)
-      .then((response) => {
-        expect(Array.isArray(response.body.articles)).toBe(true);
-      });
-  });
 
-  test("GET:200 to check the number or responses and type of the properties", () => {
+  test("GET:200 to check the number or responses and type of the properties making sure 'body' is not present", () => {
     return request(app)
       .get("/api/articles")
       .expect(200)
@@ -126,6 +118,7 @@ describe("/api/articles", () => {
           expect(typeof article.votes).toBe("number");
           expect(typeof article.article_img_url).toBe("string");
           expect(typeof article.comment_count).toBe("number");
+          expect(Object.hasOwn(article, 'body')).toBe(false);
        });
       });
   });
