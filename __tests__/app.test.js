@@ -124,7 +124,7 @@ describe("/api/articles/:article_id/comments", () => {
       .get("/api/articles/555/comments")
       .expect(404)
       .then((response) => {
-        expect(response.body.msg).toBe("article does not exist");
+        expect(response.body.msg).toBe("No comments for this article");
       });
   });
   test("GET:400 sends an appropriate status and error message when given an invalid id", () => {

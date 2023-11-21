@@ -6,7 +6,7 @@ exports.selectCommentsByArticleId = (articleId) => {
     .then(
         (result) => {
       if (!result.rows.length) {
-        return Promise.reject({ status: 404, msg: "article does not exist" });
+        return Promise.reject({ status: 404, msg: "No comments for this article" });
       }
 
       return result.rows;
