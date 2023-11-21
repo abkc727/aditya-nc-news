@@ -1,4 +1,4 @@
-const { getArticleById } = require("./controllers/articles-controllers");
+const { getArticleById, getArticles } = require("./controllers/articles-controllers");
 const {
   handleFourOFourErrors,
   handlePsqlErrors,
@@ -11,6 +11,7 @@ const app = express();
 
 app.use(express.json());
 app.get("/api/topics", getTopics);
+app.get("/api/articles", getArticles);
 
 app.get("/api/articles/:article_id", getArticleById);
 app.use(handleFourOFourErrors);

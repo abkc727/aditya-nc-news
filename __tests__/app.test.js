@@ -100,3 +100,33 @@ describe("/api", () => {
       });
   });
 })
+
+describe("/api/articles", () => {
+  test("GET:200 To check if it returns an array of articles", () => {
+    return request(app)
+      .get("/api/articles")
+      .expect(200)
+      .then((response) => {
+        expect(Array.isArray(response.body.articles)).toBe(true);
+      });
+  });
+
+  test("GET:200 to check the number or responses and type of the properties", () => {
+    return request(app)
+      .get("/api/articles")
+      .expect(200)
+      .then((response) => {
+        expect(response.body.articles.length).toBe(13);
+        response.body.articles.forEach((article) => {
+          expect(typeof article.article_id).toBe("number");
+          expect(typeof article.title).toBe("string");
+          expect(typeof article.topic).toBe("string");
+          expect(typeof article.author).toBe("string");
+          expect(typeof article.created_at).toBe("string");
+          expect(typeof article.votes).toBe("number");
+          expect(typeof article.article_img_url).toBe("string");
+          expect(typeof article.comment_count).toBe("number");
+       });
+      });
+  });
+});
