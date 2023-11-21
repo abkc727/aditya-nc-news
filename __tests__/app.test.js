@@ -100,3 +100,51 @@ describe("/api", () => {
       });
   });
 })
+
+
+describe.only("/api/articles/:article_id/comments", () => {
+
+  test("GET:200 To check if it returns an array", () => {
+    return request(app)
+      .get("/api/articles/6/comments")
+      .expect(200)
+      .then((response) => {
+        expect(Array.isArray(response.body)).toBe(true);
+      });
+  });
+  test("GET:200 To check if it sends the comments from a single article to the client", () => {
+    return request(app)
+      .get("/api/articles/6/comments")
+      .expect(200)
+      .then((response) => {
+        expect(response.body[0].comment_id).toBe(16);
+        expect(response.body[0].votes).toBe(1);
+        const expectedDate = new Date('2020-10-11 16:23:00')
+        expect(response.body[0].created_at).toEqual(expectedDate.toISOString());
+        expect(response.body[0].author).toBe('butter_bridge');
+        expect(response.body[0].body).toBe('This is a bad article name');
+        expect(response.body[0].article_id).toBe(6);
+      });
+
+    })
+
+    test("GET:404 sends an appropriate status and error message when given a valid but non-existent id", () => {
+    return request(app)
+      .get("/api/articles/6666/comments")
+      .expect(404)
+      .then((response) => {
+        expect(response.body.msg).toBe("article does not exist");
+      });
+  });
+  test("GET:400 sends an appropriate status and error message when given an invalid id", () => {
+    return request(app)
+      .get("/api/articles/not-an-article/comments")
+      .expect(400)
+      .then((response) => {
+        expect(response.body.msg).toBe("Bad Request");
+      })
+    })
+   })
+
+
+
