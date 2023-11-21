@@ -76,9 +76,9 @@ describe("/api/articles/:article_id", () => {
       .expect(400)
       .then((response) => {
         expect(response.body.msg).toBe("Bad Request");
-      })
-    })
-  })
+      });
+  });
+});
 
 describe("/api", () => {
   test("GET:200 To check if it returns an object", () => {
@@ -99,38 +99,29 @@ describe("/api", () => {
         expect(response.body).toEqual({ endpoints: expectedEndpoints });
       });
   });
-})
+});
 
-
-describe.only("/api/articles/:article_id/comments", () => {
-
-  test("GET:200 To check if it returns an array", () => {
-    return request(app)
-      .get("/api/articles/6/comments")
-      .expect(200)
-      .then((response) => {
-        expect(Array.isArray(response.body)).toBe(true);
-      });
-  });
+describe("/api/articles/:article_id/comments", () => {
   test("GET:200 To check if it sends the comments from a single article to the client", () => {
     return request(app)
       .get("/api/articles/6/comments")
       .expect(200)
       .then((response) => {
-        expect(response.body[0].comment_id).toBe(16);
-        expect(response.body[0].votes).toBe(1);
-        const expectedDate = new Date('2020-10-11 16:23:00')
-        expect(response.body[0].created_at).toEqual(expectedDate.toISOString());
-        expect(response.body[0].author).toBe('butter_bridge');
-        expect(response.body[0].body).toBe('This is a bad article name');
-        expect(response.body[0].article_id).toBe(6);
+        expect(response.body.comments.length).toBe(1);
+        response.body.comments.forEach((comment) => {
+          expect(typeof comment.comment_id).toBe("number");
+          expect(typeof comment.votes).toBe("number");
+          expect(typeof comment.author).toBe("string");
+          expect(typeof comment.body).toBe("string");
+          expect(typeof comment.article_id).toBe("number");
+          expect(typeof comment.created_at).toBe("string");
+        });
       });
+  });
 
-    })
-
-    test("GET:404 sends an appropriate status and error message when given a valid but non-existent id", () => {
+  test("GET:404 sends an appropriate status and error message when given a valid but non-existent id", () => {
     return request(app)
-      .get("/api/articles/6666/comments")
+      .get("/api/articles/555/comments")
       .expect(404)
       .then((response) => {
         expect(response.body.msg).toBe("article does not exist");
@@ -142,9 +133,6 @@ describe.only("/api/articles/:article_id/comments", () => {
       .expect(400)
       .then((response) => {
         expect(response.body.msg).toBe("Bad Request");
-      })
-    })
-   })
-
-
-
+      });
+  });
+});

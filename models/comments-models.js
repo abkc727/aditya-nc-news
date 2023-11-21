@@ -2,7 +2,7 @@ const db = require("../db/connection");
 
 exports.selectCommentsByArticleId = (articleId) => {
   return db
-    .query("SELECT * FROM comments WHERE article_id = $1", [articleId])
+    .query("SELECT * FROM comments WHERE article_id = $1 ORDER BY created_at DESC", [articleId])
     .then(
         (result) => {
       if (!result.rows.length) {
@@ -13,10 +13,3 @@ exports.selectCommentsByArticleId = (articleId) => {
     }
     );
 };
-
-// comment_id
-// votes
-// created_at
-// author
-// body
-// article_id
