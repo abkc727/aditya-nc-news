@@ -2,6 +2,8 @@ const app = require("../app");
 const request = require("supertest");
 const db = require("../db/connection");
 const seed = require("../db/seeds/seed");
+const endpoints = require("../endpoints.json");
+
 const {
   topicData,
   userData,
@@ -74,6 +76,27 @@ describe("/api/articles/:article_id", () => {
       .expect(400)
       .then((response) => {
         expect(response.body.msg).toBe("Bad Request");
+      })
+    })
+  })
+
+describe("/api", () => {
+  test("GET:200 To check if it returns an object", () => {
+    return request(app)
+      .get("/api")
+      .expect(200)
+      .then((response) => {
+        expect(typeof response.body).toBe("object");
       });
   });
-});
+
+  test("GET:200 To check if the endpoints from the response matches the original endpoints", () => {
+    return request(app)
+      .get("/api")
+      .expect(200)
+      .then((response) => {
+        const expectedEndpoints = endpoints;
+        expect(response.body).toEqual({ endpoints: expectedEndpoints });
+      });
+  });
+})
