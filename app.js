@@ -3,6 +3,7 @@ const {
   handleFourOFourErrors,
   handlePsqlErrors,
   handleServerErrors,
+  handleCustomErrors,
 } = require("./errors/errors");
 const express = require('express');
 const { getTopics } = require('./controllers/topics-controllers');
@@ -22,6 +23,7 @@ app.post("/api/articles/:article_id/comments", postComment)
 app.use(handleFourOFourErrors);
 app.use(handlePsqlErrors);
 app.use(handleServerErrors);
+app.use(handleCustomErrors);
 
 app.get('/api', getApis);
 app.get('/api/topics', getTopics);
