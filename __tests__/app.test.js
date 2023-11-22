@@ -113,11 +113,32 @@ describe("/api/articles/:article_id/comments", () => {
           expect(typeof comment.votes).toBe("number");
           expect(typeof comment.author).toBe("string");
           expect(typeof comment.body).toBe("string");
-          expect(typeof comment.article_id).toBe("number");
+          expect(comment.article_id).toBe(6);
           expect(typeof comment.created_at).toBe("string");
         });
       });
   });
+
+  test("GET:200 To check if it sends the results are sorted when there are multiple comments for an article_id", () => {
+    return request(app)
+      .get("/api/articles/1/comments")
+      .expect(200)
+      .then((response) => {
+        expect(response.body.comments.length).toBe(11);
+        expect(response.body.comments).toBeSortedBy("created_at", {
+          descending: true,
+        });
+        response.body.comments.forEach((comment) => {
+          expect(typeof comment.comment_id).toBe("number");
+          expect(typeof comment.votes).toBe("number");
+          expect(typeof comment.author).toBe("string");
+          expect(typeof comment.body).toBe("string");
+          expect(comment.article_id).toBe(1);
+          expect(typeof comment.created_at).toBe("string");
+        });
+      });
+  });
+
 
   test("GET:404 sends an appropriate status and error message when given a valid but non-existent id", () => {
     return request(app)
