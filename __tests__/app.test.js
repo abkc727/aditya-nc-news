@@ -76,9 +76,9 @@ describe("/api/articles/:article_id", () => {
       .expect(400)
       .then((response) => {
         expect(response.body.msg).toBe("Bad Request");
-      })
-    })
-  })
+      });
+  });
+});
 
 describe("/api", () => {
   test("GET:200 To check if it returns an object", () => {
@@ -99,10 +99,48 @@ describe("/api", () => {
         expect(response.body).toEqual({ endpoints: expectedEndpoints });
       });
   });
-})
+});
+
+describe("/api/articles/:article_id/comments", () => {
+  test("GET:200 To check if it sends the comments from a single article to the client", () => {
+    return request(app)
+      .get("/api/articles/6/comments")
+      .expect(200)
+      .then((response) => {
+        expect(response.body.comments.length).toBe(1);
+        response.body.comments.forEach((comment) => {
+          expect(typeof comment.comment_id).toBe("number");
+          expect(typeof comment.votes).toBe("number");
+          expect(typeof comment.author).toBe("string");
+          expect(typeof comment.body).toBe("string");
+          expect(comment.article_id).toBe(6);
+          expect(typeof comment.created_at).toBe("string");
+        });
+      });
+  });
+
+  test("GET:200 To check if it sends the results are sorted when there are multiple comments for an article_id", () => {
+    return request(app)
+      .get("/api/articles/1/comments")
+      .expect(200)
+      .then((response) => {
+        expect(response.body.comments.length).toBe(11);
+        expect(response.body.comments).toBeSortedBy("created_at", {
+          descending: true,
+        });
+        response.body.comments.forEach((comment) => {
+          expect(typeof comment.comment_id).toBe("number");
+          expect(typeof comment.votes).toBe("number");
+          expect(typeof comment.author).toBe("string");
+          expect(typeof comment.body).toBe("string");
+          expect(comment.article_id).toBe(1);
+          expect(typeof comment.created_at).toBe("string");
+        });
+      });
+  });
+});
 
 describe("/api/articles", () => {
-
   test("GET:200 to check the number or responses and type of the properties making sure 'body' is not present", () => {
     return request(app)
       .get("/api/articles")
@@ -118,10 +156,25 @@ describe("/api/articles", () => {
           expect(typeof article.votes).toBe("number");
           expect(typeof article.article_img_url).toBe("string");
           expect(typeof article.comment_count).toBe("number");
-          expect(Object.hasOwn(article, 'body')).toBe(false);
-       });
+          expect(Object.hasOwn(article, "body")).toBe(false);
+        });
       });
   });
 
-
+  test("GET:404 sends an appropriate status and error message when given a valid but non-existent id", () => {
+    return request(app)
+      .get("/api/articles/555/comments")
+      .expect(404)
+      .then((response) => {
+        expect(response.body.msg).toBe("No comments for this article");
+      });
+  });
+  test("GET:400 sends an appropriate status and error message when given an invalid id", () => {
+    return request(app)
+      .get("/api/articles/not-an-article/comments")
+      .expect(400)
+      .then((response) => {
+        expect(response.body.msg).toBe("Bad Request");
+      });
+  });
 });
