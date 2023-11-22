@@ -138,7 +138,28 @@ describe("/api/articles/:article_id/comments", () => {
         });
       });
   });
+});
 
+describe("/api/articles", () => {
+  test("GET:200 to check the number or responses and type of the properties making sure 'body' is not present", () => {
+    return request(app)
+      .get("/api/articles")
+      .expect(200)
+      .then((response) => {
+        expect(response.body.articles.length).toBe(13);
+        response.body.articles.forEach((article) => {
+          expect(typeof article.article_id).toBe("number");
+          expect(typeof article.title).toBe("string");
+          expect(typeof article.topic).toBe("string");
+          expect(typeof article.author).toBe("string");
+          expect(typeof article.created_at).toBe("string");
+          expect(typeof article.votes).toBe("number");
+          expect(typeof article.article_img_url).toBe("string");
+          expect(typeof article.comment_count).toBe("number");
+          expect(Object.hasOwn(article, "body")).toBe(false);
+        });
+      });
+  });
 
   test("GET:404 sends an appropriate status and error message when given a valid but non-existent id", () => {
     return request(app)
