@@ -125,3 +125,51 @@ describe("/api/articles", () => {
 
 
 });
+
+
+describe("POST /api/articles/:article_id/comments", () => {
+
+  test("POST:1 inserts a new comment to the db for the corresponding article_id and sends the new comment back to the client'", () => {
+    const newComment = {
+      username: 'rogersop',
+      body: 'It was beautiful!'
+    };
+    
+    return request(app)
+      .post('/api/articles/1/comments')
+      .send(newComment)
+      .expect(201)
+      .then((response) => {
+          expect(response.body.comment.comment_id).toBe(19);
+          expect(response.body.comment.author).toBe('rogersop');
+          expect(response.body.comment.body).toBe('It was beautiful!');
+      });
+  });
+
+  test('POST:400 responds with an appropriate status and error message when provided with a bad comment (no body)', () => {
+    return request(app)
+      .post('/api/articles/2/comments')
+      .send({
+        username: 'rogersop'
+        
+      })
+      .expect(400)
+      .then((response) => {
+        expect(response.body.msg).toBe('Bad Request');
+      });
+  });
+
+  test('POST:400 responds with an appropriate status and error message when provided with a non-exsiting username', () => {
+    return request(app)
+      .post('/api/articles/2/comments')
+      .send({
+        username: 'rogerso',
+        body: 'It was beautiful!'
+      })
+      .expect(400)
+      .then((response) => {
+        expect(response.body.msg).toBe('Bad Request');
+      });
+  });
+});
+
