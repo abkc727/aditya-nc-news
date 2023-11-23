@@ -187,24 +187,21 @@ describe("PATCH /api/articles/:article_id", () => {
       .send(votesObj)
       .expect(200)
       .then((response) => {
-        expect(response.body.article.article_id).toBe(1);
-        expect(response.body.article.title).toBe(
-          "Living in the shadow of a great man"
-        );
-        expect(response.body.article.topic).toBe("mitch");
-        expect(response.body.article.author).toBe("butter_bridge");
-        expect(response.body.article.body).toBe(
-          "I find this existence challenging"
-        );
-        const expectedDate = new Date("2020-07-09 21:11:00");
-        expect(response.body.article.created_at).toEqual(
-          expectedDate.toISOString()
-        );
-        expect(response.body.article.votes).toBe(102);
-        expect(response.body.article.article_img_url).toBe(
-          "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700"
-        );
-      });
+
+        expect(response.body.article).toMatchObject({
+        article_id: 1,
+        title:"Living in the shadow of a great man",
+        topic: "mitch",
+        author: "butter_bridge",
+        body: "I find this existence challenging",
+        created_at: new Date("2020-07-09 21:11:00").toISOString(),
+        votes: 102,
+        article_img_url: "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700"
+        
+
+      })
+
+      })
   });
 
   test("PATCH:404 sends an appropriate status and error message when given a valid but non-existent article_id", () => {
@@ -240,14 +237,14 @@ describe("PATCH /api/articles/:article_id", () => {
       });
   });
 
-  test("PATCH:500 sends an appropriate status and error message when given an empty object votesObj", () => {
+  test("PATCH:400 sends an appropriate status and error message when given an empty object votesObj", () => {
     const votesObj = {}
     return request(app)
       .patch("/api/articles/1")
       .send(votesObj)
-      .expect(500)
+      .expect(400)
       .then((response) => {
-        expect(response.body.msg).toBe("Internal Server Error");
+        expect(response.body.msg).toBe("Bad Request");
       });
   });
 

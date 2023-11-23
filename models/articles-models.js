@@ -27,6 +27,7 @@ exports.selectArticles = () => {
     return db
      .query(queryStr,[incVotes, articleId])
      .then((result) => {
+
       if (!result.rows.length) {
         return Promise.reject({ status: 404, msg: "article does not exist" });
       }
