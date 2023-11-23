@@ -248,8 +248,79 @@ describe("PATCH /api/articles/:article_id", () => {
       });
   });
 
-
+})
 
   
+
+describe("POST /api/articles/:article_id/comments", () => {
+
+  test("POST:1 responds with new comment back to the client'", () => {
+    const newComment = {
+      username: 'rogersop',
+      body: 'It was beautiful!'
+    };
+    
+    return request(app)
+      .post('/api/articles/1/comments')
+      .send(newComment)
+      .expect(201)
+      .then((response) => {
+          expect(response.body.comment.article_id).toBe(1);
+          expect(response.body.comment.comment_id).toBe(19);
+          expect(response.body.comment.author).toBe('rogersop');
+          expect(response.body.comment.body).toBe('It was beautiful!');
+      });
+  });
+
+  test('POST:400 responds with an appropriate status and error message when provided with a bad comment (no body)', () => {
+    return request(app)
+      .post('/api/articles/2/comments')
+      .send({
+        username: 'rogersop'
+        
+      })
+      .expect(400)
+      .then((response) => {
+        expect(response.body.msg).toBe('Bad Request');
+      });
+  });
+
+  test('POST:404 sends 404 code and error message when provided with a non-exsiting username', () => {
+    return request(app)
+      .post('/api/articles/2/comments')
+      .send({
+        username: 'rogerso',
+        body: 'It was beautiful!'
+      })
+      .expect(404)
+      .then((response) => {
+        expect(response.body.msg).toBe(`Key (author)=(rogerso) is not present in table \"users\".`);
+      });
+  });
+
+  test("GET:404 sends 404 code and error message when given a valid but non-existent article_id", () => {
+    return request(app)
+      .post("/api/articles/9999999/comments")
+      .send({
+        username: 'rogerson',
+        body: 'It was beautiful!'
+      })
+      .expect(404)
+      .then((response) => {
+        expect(response.body.msg).toBe(`Key (article_id)=(9999999) is not present in table \"articles\".`);
+      });
+  });
+  test("GET:400 sends an appropriate status and error message when given an invalid article_id", () => {
+    return request(app)
+      .post("/api/articles/not-an-article/comments")
+      .send({
+        username: 'rogerson',
+        body: 'It was beautiful!'
+      })
+      .expect(400)
+      .then((response) => {
+        expect(response.body.msg).toBe("Bad Request");
+      })
+    })
 });
 
