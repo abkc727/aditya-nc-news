@@ -70,7 +70,7 @@ const seed = ({ topicData, userData, articleData, commentData }) => {
         userData.map(({ username, name, avatar_url }) => [
           username,
           name,
-          avatar_url,
+          avatar_url
         ])
       );
       const usersPromise = db.query(insertUsersQueryStr);
