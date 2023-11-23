@@ -18,3 +18,9 @@ Run the following commands
 2. npm install -D supertest
 
 3. npm i express
+
+4. npm i jest-sorted. 
+Also add the following in the package.json file.
+"jest": {
+  "setupFilesAfterEnv": ["jest-sorted"]
+}
