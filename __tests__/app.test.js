@@ -179,31 +179,80 @@ describe("/api/articles", () => {
   });
 });
 
-// describe("PATCH /api/articles/:article_id", () => {
-//   test("PATCH:200 to check the number or responses and type of the properties making sure 'body' is not present", () => {
-//     votesObj = {inc_votes: 2}
-//     return request(app)
-//       .patch("/api/articles/1")
-//       .expect(200)
-//       .then((response) => {
-//         expect(response.body.article.article_id).toBe(1);
-//         expect(response.body.article.title).toBe(
-//           "Living in the shadow of a great man"
-//         );
-//         expect(response.body.article.topic).toBe("mitch");
-//         expect(response.body.article.author).toBe("butter_bridge");
-//         expect(response.body.article.body).toBe(
-//           "I find this existence challenging"
-//         );
-//         const expectedDate = new Date("2020-07-09 21:11:00");
-//         expect(response.body.article.created_at).toEqual(
-//           expectedDate.toISOString()
-//         );
-//         expect(response.body.article.votes).toBe(2);
-//         expect(response.body.article.article_img_url).toBe(
-//           "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700"
-//         );
-//       });
-//   });
-//   });
+describe("PATCH /api/articles/:article_id", () => {
+  test("PATCH:200 updates votes of an article", () => {
+    const votesObj = {inc_votes: 2}
+    return request(app)
+      .patch("/api/articles/1")
+      .send(votesObj)
+      .expect(200)
+      .then((response) => {
+        expect(response.body.article.article_id).toBe(1);
+        expect(response.body.article.title).toBe(
+          "Living in the shadow of a great man"
+        );
+        expect(response.body.article.topic).toBe("mitch");
+        expect(response.body.article.author).toBe("butter_bridge");
+        expect(response.body.article.body).toBe(
+          "I find this existence challenging"
+        );
+        const expectedDate = new Date("2020-07-09 21:11:00");
+        expect(response.body.article.created_at).toEqual(
+          expectedDate.toISOString()
+        );
+        expect(response.body.article.votes).toBe(102);
+        expect(response.body.article.article_img_url).toBe(
+          "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700"
+        );
+      });
+  });
+
+  test("PATCH:404 sends an appropriate status and error message when given a valid but non-existent article_id", () => {
+    const votesObj = {inc_votes: 2}
+    return request(app)
+      .patch("/api/articles/9999999")
+      .send(votesObj)
+      .expect(404)
+      .then((response) => {
+        expect(response.body.msg).toBe("article does not exist");
+      });
+  });
+
+  test("PATCH:400 sends an appropriate status and error message when given an invalid article_id", () => {
+    const votesObj = {inc_votes: 2}
+    return request(app)
+      .patch("/api/articles/not-an-article")
+      .send(votesObj)
+      .expect(400)
+      .then((response) => {
+        expect(response.body.msg).toBe("Bad Request");
+      });
+  });
+
+  test("PATCH:400 sends an appropriate status and error message when given an invalid inc_votes", () => {
+    const votesObj = {inc_votes: 'hello'}
+    return request(app)
+      .patch("/api/articles/1")
+      .send(votesObj)
+      .expect(400)
+      .then((response) => {
+        expect(response.body.msg).toBe("Bad Request");
+      });
+  });
+
+  test("PATCH:500 sends an appropriate status and error message when given an empty object votesObj", () => {
+    const votesObj = {}
+    return request(app)
+      .patch("/api/articles/1")
+      .send(votesObj)
+      .expect(500)
+      .then((response) => {
+        expect(response.body.msg).toBe("Internal Server Error");
+      });
+  });
+
+
+
+  
+});
 
