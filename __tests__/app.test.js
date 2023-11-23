@@ -294,7 +294,7 @@ describe("POST /api/articles/:article_id/comments", () => {
       });
   });
 
-  test("GET:404 sends 404 code and error message when given a valid but non-existent article_id", () => {
+  test("POST:404 sends 404 code and error message when given a valid but non-existent article_id", () => {
     return request(app)
       .post("/api/articles/9999999/comments")
       .send({
@@ -308,7 +308,7 @@ describe("POST /api/articles/:article_id/comments", () => {
         );
       });
   });
-  test("GET:400 sends an appropriate status and error message when given an invalid article_id", () => {
+  test("POST:400 sends an appropriate status and error message when given an invalid article_id", () => {
     return request(app)
       .post("/api/articles/not-an-article/comments")
       .send({
