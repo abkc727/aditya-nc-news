@@ -388,4 +388,24 @@ describe("GET /api/articles filtered by topic", () => {
       });
   });
 
+  test("GET:200 responds with empty array for a valid topic but not present in articles", () => {
+    return request(app)
+      .get("/api/articles?topic=paper")
+      .expect(200)
+      .then((response) => {
+        expect(response.body.articles).toEqual([]);
+      });
+  });
+
+  test("GET:404 responds with an appropriate status and error message when provided with an invalid topic query", () => {
+    return request(app)
+      .get("/api/articles?topic=normal")
+      .expect(404)
+      .then((response) => {
+        expect(response.body.msg).toBe("topic not found!");
+      });
+  });
+
 });
+
+
