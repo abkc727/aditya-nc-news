@@ -363,3 +363,49 @@ describe("GET /api/users", () => {
       });
   });
 });
+
+describe("GET /api/articles filtered by topic", () => {
+  test("GET:200 responds with articles filtered by topic", () => {
+    return request(app)
+      .get("/api/articles?topic=mitch")
+      .expect(200)
+      .then((response) => {
+        expect(response.body.articles.length).toBe(12);
+        expect(response.body.articles).toBeSortedBy("created_at", {
+          descending: true,
+        });
+        response.body.articles.forEach((article) => {
+          expect(article).toMatchObject({
+            article_id: expect.any(Number),
+            title: expect.any(String),
+            topic: 'mitch',
+            author: expect.any(String),
+            created_at: expect.any(String),
+            article_img_url: expect.any(String),
+            comment_count: expect.any(Number),
+          })
+        });
+      });
+  });
+
+  test("GET:200 responds with empty array for a valid topic but not present in articles", () => {
+    return request(app)
+      .get("/api/articles?topic=paper")
+      .expect(200)
+      .then((response) => {
+        expect(response.body.articles).toEqual([]);
+      });
+  });
+
+  test("GET:404 responds with an appropriate status and error message when provided with an invalid topic query", () => {
+    return request(app)
+      .get("/api/articles?topic=normal")
+      .expect(404)
+      .then((response) => {
+        expect(response.body.msg).toBe("topic not found!");
+      });
+  });
+
+});
+
+
