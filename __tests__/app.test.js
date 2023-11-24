@@ -139,7 +139,6 @@ describe("GET/api/articles/:article_id/comments", () => {
       });
   });
 
-  
   test("GET:404 sends an appropriate status and error message when given a valid but non-existent id", () => {
     return request(app)
       .get("/api/articles/555/comments")
@@ -178,7 +177,6 @@ describe("GET /api/articles", () => {
         });
       });
   });
-
 });
 
 describe("PATCH /api/articles/:article_id", () => {
@@ -355,10 +353,10 @@ describe("GET /api/users", () => {
         expect(response.body.users.length).toBe(4);
         response.body.users.forEach((user) => {
           expect(user).toMatchObject({
-              username: expect.any(String),
-              name: expect.any(String),
-              avatar_url: expect.any(String)
-            })
+            username: expect.any(String),
+            name: expect.any(String),
+            avatar_url: expect.any(String),
+          });
         });
       });
   });
@@ -378,12 +376,12 @@ describe("GET /api/articles filtered by topic", () => {
           expect(article).toMatchObject({
             article_id: expect.any(Number),
             title: expect.any(String),
-            topic: 'mitch',
+            topic: "mitch",
             author: expect.any(String),
             created_at: expect.any(String),
             article_img_url: expect.any(String),
             comment_count: expect.any(Number),
-          })
+          });
         });
       });
   });
@@ -405,7 +403,27 @@ describe("GET /api/articles filtered by topic", () => {
         expect(response.body.msg).toBe("topic not found!");
       });
   });
-
 });
 
+describe("GET comment_count from /api/articles/:article_id", () => {
+  test("GET:200 To check if it sends a single article to the client with comment_count", () => {
+    return request(app)
+      .get("/api/articles/1")
+      .expect(200)
+      .then((response) => {
+        expect(response.body.article).toMatchObject({
+          article_id: 1,
+          title: "Living in the shadow of a great man",
+          topic: "mitch",
+          body: "I find this existence challenging",
+          author: "butter_bridge",
+          votes: 100,
+          created_at: new Date("2020-07-09 21:11:00").toISOString(),
+          article_img_url:
+            "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
+          comment_count: 11,
+        });
+      });
+  });
 
+});
