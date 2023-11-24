@@ -3,7 +3,8 @@ const { checkTopicExists } = require("../models/topics-models");
 
 exports.getArticleById = (req, res, next) => {
   const articleId = req.params.article_id;
-  selectArticlesById(articleId)
+  const {comment_count} = req.query
+  selectArticlesById(articleId, comment_count)
     .then((article) => {
       res.status(200).send({ article });
     })
