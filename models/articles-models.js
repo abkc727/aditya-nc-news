@@ -1,19 +1,8 @@
 const db = require("../db/connection");
 
-exports.selectArticlesById = (articleId, comment_count) => {
-  const validCommentQuery = ["true", "false"];
-  let queryStr = "SELECT articles.*";
-
-  if (comment_count && !validCommentQuery.includes(comment_count)) {
-    return Promise.reject({ status: 400, msg: "Bad Request" });
-  }
-
-  if (comment_count === "true") {
-    queryStr +=
-      ", CAST((SELECT COUNT(*) FROM comments WHERE article_id = $1) AS INTEGER) AS comment_count";
-  }
-
-  queryStr += " FROM articles WHERE article_id = $1";
+exports.selectArticlesById = (articleId) => {
+  
+  const queryStr = "SELECT articles.*, CAST((SELECT COUNT(*) FROM comments WHERE article_id = $1) AS INTEGER) AS comment_count FROM articles WHERE article_id = $1";
 
   return db.query(queryStr, [articleId]).then((result) => {
     if (!result.rows.length) {

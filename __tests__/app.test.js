@@ -406,9 +406,9 @@ describe("GET /api/articles filtered by topic", () => {
 });
 
 describe("GET comment_count from /api/articles/:article_id", () => {
-  test("GET:200 To check if it sends a single article to the client", () => {
+  test("GET:200 To check if it sends a single article to the client with comment_count", () => {
     return request(app)
-      .get("/api/articles/1?comment_count=true")
+      .get("/api/articles/1")
       .expect(200)
       .then((response) => {
         expect(response.body.article).toMatchObject({
@@ -417,6 +417,7 @@ describe("GET comment_count from /api/articles/:article_id", () => {
           topic: "mitch",
           body: "I find this existence challenging",
           author: "butter_bridge",
+          votes: 100,
           created_at: new Date("2020-07-09 21:11:00").toISOString(),
           article_img_url:
             "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
@@ -425,46 +426,4 @@ describe("GET comment_count from /api/articles/:article_id", () => {
       });
   });
 
-  test("GET:200 To check if it sends article without comment_count when query value = false", () => {
-    return request(app)
-      .get("/api/articles/1?comment_count=false")
-      .expect(200)
-      .then((response) => {
-        expect(response.body.article).toMatchObject({
-          article_id: 1,
-          title: "Living in the shadow of a great man",
-          topic: "mitch",
-          body: "I find this existence challenging",
-          author: "butter_bridge",
-          created_at: new Date("2020-07-09 21:11:00").toISOString(),
-          article_img_url:
-            "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
-        });
-      });
-  });
-  test("GET:404 sends an appropriate status and error message when given a valid but non-existent id", () => {
-    return request(app)
-      .get("/api/articles/9999999?comment_count=true")
-      .expect(404)
-      .then((response) => {
-        expect(response.body.msg).toBe("article does not exist");
-      });
-  });
-  test("GET:400 sends an appropriate status and error message when given an invalid id", () => {
-    return request(app)
-      .get("/api/articles/not-an-article?comment_count=true")
-      .expect(400)
-      .then((response) => {
-        expect(response.body.msg).toBe("Bad Request");
-      });
-  });
-
-  test("GET:400 responds with an appropriate status and error message when provided with an invalid comment_count", () => {
-    return request(app)
-      .get("/api/articles/1?comment_count=1")
-      .expect(400)
-      .then((response) => {
-        expect(response.body.msg).toBe("Bad Request");
-      });
-  });
 });
