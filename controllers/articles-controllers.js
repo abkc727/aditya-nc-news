@@ -14,9 +14,11 @@ exports.getArticleById = (req, res, next) => {
 };
 
 exports.getArticles = (req, res, next) => {
-  const {topic} = req.query
+  const queryObj = req.query
+  const topic = queryObj.topic
+  
 
-  const articlePromises = [selectArticles(topic)]
+  const articlePromises = [selectArticles(queryObj)]
   
   if(topic) {
     articlePromises.push(checkTopicExists(topic))
@@ -28,6 +30,7 @@ exports.getArticles = (req, res, next) => {
         res.status(200).send({ articles });
       })
       .catch((err) => {
+
         next(err);
       });
   };
