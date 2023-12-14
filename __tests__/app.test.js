@@ -427,3 +427,30 @@ describe("GET comment_count from /api/articles/:article_id", () => {
   });
 
 });
+
+
+describe("GET SORT /api/articles", () => {
+  test("GET:200 ", () => {
+    return request(app)
+      .get("/api/articles?order=desc")
+      .expect(200)
+      .then((response) => {
+        expect(response.body.articles.length).toBe(13);
+        expect(response.body.articles).toBeSortedBy("created_at", {
+          descending: true,
+        });
+        response.body.articles.forEach((article) => {
+          expect(article).toMatchObject({
+            article_id: expect.any(Number),
+            title: expect.any(String),
+            topic: expect.any(String),
+            author: expect.any(String),
+            created_at: expect.any(String),
+            article_img_url: expect.any(String),
+            comment_count: expect.any(Number),
+          });
+        });
+      });
+  });
+
+});
